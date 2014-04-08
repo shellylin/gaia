@@ -91,6 +91,7 @@ const IMERender = (function() {
 
   // Draw the keyboard and its components. Meat is here.
   var draw = function kr_draw(layout, flags, callback) {
+    dump('TaskTracerDump: render.js#draw-start');
     flags = flags || {};
 
     var supportsSwitching = 'mozInputMethod' in navigator ?
@@ -139,6 +140,7 @@ const IMERender = (function() {
         requestAnimationFrame(callback);
       }
     }
+    dump('TaskTracerDump: render.js#draw-end');
   };
 
   /**
@@ -146,6 +148,7 @@ const IMERender = (function() {
    * Pass a container element
    */
   var buildKeyboard = function kr_build(container, flags, layout) {
+    dump('TaskTracerDump: render.js#buildKeyboard-start');
     flags = flags || {};
 
     // change scale (Our target screen width is 320px)
@@ -246,10 +249,12 @@ const IMERender = (function() {
     } else {
       container.classList.remove('candidate-panel');
     }
+    dump('TaskTracerDump: render.js#buildKeyboard-end');
   };
 
   var showIME = function hm_showIME() {
     delete ime.dataset.hidden;
+    dump('TaskTracerDump: render.js showIME, after deleting the dataset.hidden');
   };
 
   var hideIME = function km_hideIME() {

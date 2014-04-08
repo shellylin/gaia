@@ -765,6 +765,7 @@ function renderKeyboard(keyboardName, callback) {
   currentLayout = modifyLayout(keyboardName);
 
   function drawKeyboard() {
+    dump('TaskTracerDump: keyboard.js#drawKeyboard-start');
     var keyboard = Keyboards[keyboardName];
 
     IMERender.ime.classList.remove('full-candidate-panel');
@@ -781,6 +782,7 @@ function renderKeyboard(keyboardName, callback) {
       inputType: currentInputType,
       showCandidatePanel: needsCandidatePanel()
     }, function() {
+      dump('TaskTracerDump: keyboard.js#renderKeyboard - render:draw-start');
       startTime('BLOCKING (nextTick) renderKeyboard');
       // So there are a couple of things that we want don't want to block
       // on here, so we can do it if resizeUI is fully finished
@@ -791,6 +793,7 @@ function renderKeyboard(keyboardName, callback) {
 
       IMERender.showCandidates(currentCandidates);
       endTime('BLOCKING (nextTick) renderKeyboard');
+      dump('TaskTracerDump: keyboard.js#renderKeyboard - render:draw-end');
     });
 
     // Tell the renderer what input method we're using. This will set a CSS
@@ -808,6 +811,7 @@ function renderKeyboard(keyboardName, callback) {
     if (callback) {
       callback();
     }
+    dump('TaskTracerDump: keyboard.js#drawKeyboard-end');
   }
 
   clearTimeout(redrawTimeout);
@@ -1681,6 +1685,7 @@ function showKeyboard() {
   });
 
   function doShowKeyboard() {
+    dump('TaskTracerDump: doShowKeyboard - start');
     // Force to disable the auto correction for Greek SMS layout.
     // This is because the suggestion result is still unicode and
     // we would not convert the suggestion result to GSM 7-bit.
@@ -1697,6 +1702,7 @@ function showKeyboard() {
     renderKeyboard(keyboardName, function() {
       IMERender.showIME();
     });
+    dump('TaskTracerDump: doShowKeyboard - end');
   }
 
   var promise = inputContext.getText();

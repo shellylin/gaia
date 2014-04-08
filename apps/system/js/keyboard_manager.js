@@ -528,7 +528,7 @@ var KeyboardManager = {
 
       delete self.keyboardFrameContainer.dataset.transitionIn;
       self._debug('showKeyboard display transitionend');
-
+      dump('TaskTracerDump: showKeyboard display transitionend.');
       // keyboard is now hidden?
       if (self.keyboardFrameContainer.classList.contains('hide')) {
         return;
