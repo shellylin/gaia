@@ -5,6 +5,7 @@
   }
 
   var systemRemote = {
+    DEBUG: false,
     _started: false,
     hasStarted: function systemRemote_hasStarted() {
       return this._started;
@@ -19,6 +20,10 @@
       this.cursorY = this.centerY = screen.height / 2;
       this.logger = document.getElementById('log');
       this.logger2 = document.getElementById('log2');
+      if (this.DEBUG) {
+        this.logger.classList.add('visible');
+        this.logger2.classList.add('visible');
+      }
 
       this.bc = new window.BroadcastChannel('multiscreen');
       this.bc.addEventListener('message', this);
@@ -54,9 +59,6 @@
       var nh = screen.height;
       var nx = nw*ox/ow;
       var ny = nh*oy/oh;
-      if (this.DEBUG) {
-        this.logger2.innerHTML = 'x='+nx+',y='+ny;
-      }
       switch (data.type) {
         case 'touchstart':
           this._startX = nx;
@@ -68,6 +70,14 @@
         case 'touchend':
           this.cursorX = this.cursorX + nx - this._startX;
           this.cursorY = this.cursorY + ny - this._startY;
+          var deltaX = Math.abs(nx - this._startX);
+          var deltaY = Math.abs(ny - this._startY);
+          
+          if (this.contentBrowser && deltaX <= 5 && deltaY <= 5) {
+            this.contentBrowser.sendMouseEvent('mousemove', this.cursorX, this.cursorY, 0, 0, 0);
+            this.contentBrowser.sendMouseEvent('mousedown', this.cursorX, this.cursorY, 0, 1, 0);
+            this.contentBrowser.sendMouseEvent('mouseup', this.cursorX, this.cursorY, 0, 1, 0);
+          }
           break;
       }
       this.contentBrowser &&
