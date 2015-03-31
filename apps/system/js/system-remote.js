@@ -6,9 +6,19 @@
 
   var systemRemote = {
     DEBUG: false,
+    CURSOR_OFFSET_X: -15,
+    CURSOR_OFFSET_Y: -8,
     _started: false,
     hasStarted: function systemRemote_hasStarted() {
       return this._started;
+    },
+
+    getCursorX: function(x) {
+      return this.cursorX + this.CURSOR_OFFSET_X;
+    },
+
+    getCursorY: function(y) {
+      return this.cursorY + this.CURSOR_OFFSET_Y;
     },
 
     start: function systemRemote_start() {
@@ -49,6 +59,61 @@
 
     },
 
+    sendMouseMove: function() {
+      this.contentBrowser &&
+      this.contentBrowser.sendMouseEvent(
+        'mousemove', this.getCursorX(), this.getCursorY(), 0, 0, 0);
+      window.dispatchEvent(new CustomEvent('mozContentEvent', {
+        detail: {
+          type: 'mouse',
+          detail: ['mousemove', this.getCursorX(), this.getCursorY(), 0, 0, 0]
+        }
+      }));
+    },
+
+    sendMouseUp: function() {
+      this.contentBrowser &&
+      this.contentBrowser.sendMouseEvent(
+        'mouseup', this.getCursorX(), this.getCursorY(), 0, 1, 0);
+      window.dispatchEvent(new CustomEvent('mozContentEvent', {
+        detail: {
+          type: 'mouse',
+          detail: ['mouseup', this.getCursorX(), this.getCursorY(), 0, 1, 0]
+        }
+      }));
+    },
+
+    sendMouseDown: function() {
+      this.contentBrowser &&
+      this.contentBrowser.sendMouseEvent(
+        'mousedown', this.getCursorX(), this.getCursorY(), 0, 1, 0);
+      window.dispatchEvent(new CustomEvent('mozContentEvent', {
+        detail: {
+          type: 'mouse',
+          detail: ['mousedown', this.getCursorX(), this.getCursorY(), 0, 1, 0]
+        }
+      }));
+    },
+
+    sendTouchEvent: function(data) {
+      var touch = data.touch;
+      this.contentBrowser &&
+      this.contentBrowser.sendTouchEvent(data.type, [touch.identifier],
+                                    [this.getCursorX()], [this.getCursorY()],
+                                    [touch.radiusX], [touch.radiusY],
+                                    [touch.rotationAngle], [touch.force], 1, 0);
+
+      window.dispatchEvent(new CustomEvent('mozContentEvent', {
+        detail: {
+          type: 'touch',
+          detail: [[touch.identifier],
+                                    [this.getCursorX()], [this.getCursorY()],
+                                    [touch.radiusX], [touch.radiusY],
+                                    [touch.rotationAngle], [touch.force], 1, 0]
+        }
+      }));
+    },
+
     _handle_touch: function(data) {
       var touch = data.touch;
       var ox = touch.pageX;
@@ -74,17 +139,13 @@
           var deltaY = Math.abs(ny - this._startY);
           
           if (this.contentBrowser && deltaX <= 5 && deltaY <= 5) {
-            this.contentBrowser.sendMouseEvent('mousemove', this.cursorX, this.cursorY, 0, 0, 0);
-            this.contentBrowser.sendMouseEvent('mousedown', this.cursorX, this.cursorY, 0, 1, 0);
-            this.contentBrowser.sendMouseEvent('mouseup', this.cursorX, this.cursorY, 0, 1, 0);
+            this.sendMouseMove();
+            this.sendMouseDown();
+            this.sendMouseUp();
           }
           break;
       }
-      this.contentBrowser &&
-      this.contentBrowser.sendTouchEvent(data.type, [touch.identifier],
-                                    [this.cursorX], [this.cursorY],
-                                    [touch.radiusX], [touch.radiusY],
-                                    [touch.rotationAngle], [touch.force], 1, 0);
+      this.sendTouchEvent(data);
     },
 
     updateCursor: function(x, y) {
