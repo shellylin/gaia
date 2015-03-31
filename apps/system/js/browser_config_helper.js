@@ -43,6 +43,7 @@
     var app = config.manifestURL &&
               applications.getByManifestURL(config.manifestURL);
     this.url = config.url;
+    this.remoteId = config.remoteId;
 
     if (app) {
       var manifest = app.manifest;

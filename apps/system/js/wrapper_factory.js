@@ -10,10 +10,26 @@
   var WrapperFactory = {
     init: function wf_init() {
       window.addEventListener('mozbrowseropenwindow', this, true);
+      this.bc = new BroadcastChannel('multiscreen');
     },
 
     handleEvent: function wf_handleEvent(evt) {
       var detail = evt.detail;
+
+      dump('WrapperFactory: ' + JSON.stringify(evt.detail));
+
+      // When would we get here?
+      /*
+      if (evt.detail.features.contains('remoteId=')) {
+        var displayId = RegExp('remoteId=([0-9]*)').exec(evt.detail.features)[1];
+        this.bc.postMessage({
+          displayId: displayId,
+          url: evt.detail.url,
+          manifestURL: null
+        });
+        return;
+      }
+      */
 
       // If it's a normal window.open request, ignore.
       if (typeof detail.features !== 'string') {

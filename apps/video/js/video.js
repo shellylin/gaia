@@ -729,7 +729,10 @@ function thumbnailClickHandler(videodata) {
       // video player. Otherwise, we'll have contention for the video hardware
       stopParsingMetadata(function() {
         var fullscreen = pendingPick || isPhone || isPortrait;
-        showPlayer(videodata, !pendingPick, fullscreen, pendingPick);
+        //showPlayer(videodata, !pendingPick, fullscreen, pendingPick);
+        var hash = JSON.stringify(videodata);
+        dump('Video: hash: ' + hash);
+        window.open('present.html#' + encodeURIComponent(hash), '_blank', 'remoteId=1');
       });
     });
   }
@@ -951,6 +954,7 @@ function setVideoUrl(player, video, callback) {
   if ('name' in video) {
     videodb.getFile(video.name, function(file) {
       var url = URL.createObjectURL(file);
+      dump('Video: ' + JSON.stringify(url));
       loadVideo(url);
 
       if (pendingPick)

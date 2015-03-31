@@ -88,7 +88,7 @@
     /**
      * Launches the bookmark in a browser window.
      */
-    launch: function() {
+    launch: function(target, remoteId) {
       var features = {
         name: this.name,
         icon: this.icon,
@@ -99,6 +99,9 @@
       if (this.features.search) {
         features.searchName = this.name;
         features.searchUrl = url;
+      }
+      if (remoteId) {
+        features.remoteId = remoteId;
       }
 
       window.open(url, '_blank', Object.keys(features)

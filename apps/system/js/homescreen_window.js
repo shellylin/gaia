@@ -112,6 +112,7 @@
     'valueSelector': window.ValueSelector,
     'authDialog': window.AppAuthenticationDialog,
     'childWindowFactory': window.ChildWindowFactory,
+    'contextmenu': window.BrowserContextMenu, // For display window selection.
     'statusbar': window.AppStatusbar
   };
 

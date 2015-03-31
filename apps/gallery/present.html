@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#242d33">
+    <title>Gallery Present</title>
+    <link rel="stylesheet" href="shared/style/status.css" type="text/css" />
+    <link rel="stylesheet" href="style/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="style/VideoPlayer.css" type="text/css" />
+    <link rel="stylesheet" href="style/VideoPlayer_tablet.css" type="text/css" media="(min-height: 768px) and (min-width: 768px)" />
+    <!-- Localization -->
+    <meta name="defaultLanguage" content="en-US">
+    <meta name="availableLanguages" content="ar, en-US, fr, zh-TW">
+    <link rel="localization" href="locales/gallery.{locale}.properties">
+    <!-- js files -->
+    <script defer src="shared/js/l10n.js"></script>
+    <script defer src="shared/js/l10n_date.js"></script>
+    <script defer src="shared/js/template.js"></script>
+    <script defer src="shared/js/lazy_loader.js"></script>
+    <script defer src="shared/js/device_storage/enumerate_all.js"></script>
+    <script defer src="shared/js/media/video_player.js"></script>
+    <script type="text/javascript" defer src="shared/js/media/media_frame.js"></script>
+    <script defer src="shared/js/media/media_utils.js"></script>
+    <script defer src="shared/js/media/downsample.js"></script>
+    <script defer src="shared/js/mediadb.js"></script>
+    <script defer src="js/MetadataParser.js"></script>
+    <script defer src="js/config.js"></script>
+    <script defer src="js/present.js"></script>
+  </head>
+
+  <body role="application" class="theme-media">
+    <div id="mainframe"></div>
+  </body>
+</html>

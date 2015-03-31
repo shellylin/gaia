@@ -342,6 +342,13 @@
 /**
  * Global overlays are on top of everything, all the time.
  */
+#screen > [data-z-index-level="pseudo-touch-panel"] {
+  z-index: 2147483647;
+}
+
+/**
+ * Global overlays are on top of everything, all the time.
+ */
 #screen > [data-z-index-level="global-overlays"] {
   z-index: 2147483647;
 }

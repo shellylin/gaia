@@ -24,6 +24,7 @@
     this.instanceID = _id++;
     this._injected = false;
     this.app.element.addEventListener('mozbrowsercontextmenu', this);
+    this.bc = new BroadcastChannel('multiscreen');
     return this;
   };
 
@@ -264,6 +265,16 @@
     newTabApp.launch();
   };
 
+  BrowserContextMenu.prototype.newRemoteWindow = function(url, manifestURL, displayId) {
+    dump('BrowserContextMenu: ' + url + manifestURL + displayId);
+
+    this.bc.postMessage({
+      displayId: displayId,
+      url: url,
+      manifestURL: manifestURL
+    });
+  };
+
   BrowserContextMenu.prototype.showWindows = function(manifest) {
     window.dispatchEvent(
       new CustomEvent('taskmanagershow',
@@ -335,6 +346,22 @@
     return new Promise((resolve) => {
       var config = this.app.config;
       var menuData = [];
+
+      if (this.app.configOverride) {
+        config = this.app.configOverride;
+      }
+
+      menuData.push({
+        id: 'new-remote-window-hdmi',
+        label: 'New window (HDMI)',
+        callback: this.newRemoteWindow.bind(this, config.url, config.manifestURL, '1')
+      });
+
+      menuData.push({
+        id: 'new-remote-window-virtual',
+        label: 'New window (Wifi Display)',
+        callback: this.newRemoteWindow.bind(this, config.url, config.manifestURL, '2')
+      });
 
       menuData.push({
         id: 'new-window',

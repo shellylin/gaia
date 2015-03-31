@@ -38,10 +38,39 @@
       this.createActivityWindow.bind(this));
     this.app.element.addEventListener('_launchtrusted',
       this.createTrustedWindow.bind(this));
+    this.bc = new BroadcastChannel('multiscreen');
   };
 
   ChildWindowFactory.prototype.handleEvent =
     function cwf_handleEvent(evt) {
+      dump('ChildWindowFactory:' + evt.type + ': ' + JSON.stringify(evt.detail) + ',' +
+           'manifestURL: ' + this.app.manifestURL);
+
+      if (evt.type === 'mozbrowseropenwindow') {
+        // Calling window.open from an app will get here.
+        // E.g. From homescreen or gallery app.
+
+        var displayId = RegExp('remoteId=([0-9]*)').exec(evt.detail.features)[1];
+        if (displayId) {
+          this.app.configOverride = {
+            url: evt.detail.url,
+            manifestURL: this.app.manifestURL
+          };
+
+          // If this event is from homescreen, use the manifestURL carried
+          // by the feature string.
+          if (this.app.origin.contains('verticalhome')) {
+            var manifestURL = RegExp('manifestURL=(.*),').exec(evt.detail.features + ',')[1];
+            this.app.configOverride.manifestURL = manifestURL;
+          }
+
+          dump('this.app.configOverride: ' + JSON.stringify(this.app.configOverride));
+
+          this.app.showDefaultContextMenu();
+          return;
+        }
+      }
+
       // Handle event from child window.
       if (evt.detail && evt.detail.instanceID &&
           evt.detail.instanceID !== this.app.instanceID) {
